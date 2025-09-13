@@ -1,10 +1,12 @@
 // bakend/controllers/authController.js
+
+
 const User = require('../models/Users')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 
-
+// For signup
 const signup = async (req, res) => {
     try {
         const jwt_secret = process.env.JWT_SECRET;
@@ -45,6 +47,8 @@ const signup = async (req, res) => {
     }
 }
 
+
+// For login
 const login = async (req, res) => {
     try {
         const jwt_secret = process.env.JWT_SECRET;

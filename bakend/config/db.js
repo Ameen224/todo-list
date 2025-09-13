@@ -9,6 +9,6 @@ const connectdb = async () => {
     } catch (err) {
         console.log(err);
     }
-}
+}  
 
 module.exports = connectdb
