@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Api from "../services/api";
+import Navbar from "../components/Navbar"
 
 export default function Tasks() {
     const [tasks, setTasks] = useState([]);
@@ -91,9 +92,10 @@ export default function Tasks() {
     if (loading) return <p className="text-center mt-10 text-gray-600">Loading tasks...</p>;
 
     return (
+        <div>
+            <Navbar />
         <div className="max-w-2xl mx-auto mt-10 p-4">
-            <h1 className="text-2xl font-bold mb-4">My Tasks</h1>
-
+            
             {/* Add Task Form */}
             <form onSubmit={handleAddTask} className="flex flex-col gap-2 mb-6">
                 <input
@@ -124,6 +126,7 @@ export default function Tasks() {
             ) : (
                 <ul className="space-y-3">
                     {tasks.map((task) => (
+                        
                         <li
                             key={task._id}
                             className="p-4 bg-white rounded shadow flex justify-between items-center"
@@ -198,6 +201,7 @@ export default function Tasks() {
                     ))}
                 </ul>
             )}
+        </div>
         </div>
     );
 }
