@@ -15,7 +15,27 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
+
+
+// handle expire token
+API.interceptors.response.use(
+    (res)=>res,
+    (err)=>{
+        if(err.response?.status === 401){
+            localStorage.removeItem('token')
+
+            window.location.href = '/login'
+        }
+        return Promise.reject(err)
+    }
+
+)
+
+
 export default API;
+
+
+
 
 
 
