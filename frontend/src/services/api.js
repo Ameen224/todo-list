@@ -3,39 +3,28 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL,
+    baseURL: import.meta.env.VITE_BACKEND_URL,
 });
 
-// attach token if available
+// Attach token
 API.interceptors.request.use((req) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    req.headers.Authorization = `Bearer ${token}`;
-  }
-  return req;
+    const token = localStorage.getItem("token");
+    if (token) {
+        req.headers.Authorization = `Bearer ${token}`;
+    }
+    return req;
 });
 
-
-
-// handle expire token
+// Handle expired token
 API.interceptors.response.use(
-    (res)=>res,
-    (err)=>{
-        if(err.response?.status === 401){
-            localStorage.removeItem('token')
-
-            window.location.href = '/login'
+    (res) => res,
+    (err) => {
+        if (err.response?.status === 401) {
+            localStorage.removeItem("token");
+            window.location.href = "/login";
         }
-        return Promise.reject(err)
+        return Promise.reject(err);
     }
-
-)
-
+);
 
 export default API;
-
-
-
-
-
-

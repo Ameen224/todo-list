@@ -1,17 +1,15 @@
 // src/pages/Tasks.jsx
+// src/pages/Tasks.jsx
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Api from "../services/api";
-import Navbar from "../components/Navbar"
+import Navbar from "../components/Navbar";
 
 export default function Tasks() {
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [newTask, setNewTask] = useState("");
     const [newDisc, setNewDisc] = useState("");
-    const [editingTask, setEditingTask] = useState(null); // track editing task
-    const [editTitle, setEditTitle] = useState("");
-    const [editDesc, setEditDesc] = useState("");
 
     // Fetch tasks
     const fetchTasks = async () => {
@@ -44,16 +42,6 @@ export default function Tasks() {
         }
     };
 
-    // Toggle complete
-    const handleToggleComplete = async (id, completed) => {
-        try {
-            await Api.put(`/tasks/${id}`, { completed: !completed });
-            fetchTasks();
-        } catch (err) {
-            console.error("Error updating task:", err);
-        }
-    };
-
     // Delete task
     const handleDelete = async (id) => {
         try {
@@ -64,144 +52,88 @@ export default function Tasks() {
         }
     };
 
-    // Start editing
-    const startEditing = (task) => {
-        setEditingTask(task._id);
-        setEditTitle(task.title);
-        setEditDesc(task.description || "");
-    };
-
-    // Cancel editing
-    const cancelEditing = () => {
-        setEditingTask(null);
-        setEditTitle("");
-        setEditDesc("");
-    };
-
-    // Save edit
-    const handleSaveEdit = async (id) => {
-        try {
-            await Api.put(`/tasks/${id}`, { title: editTitle, description: editDesc });
-            cancelEditing();
-            fetchTasks();
-        } catch (err) {
-            console.error("Error saving task:", err);
-        }
-    };
-
-    if (loading) return <p className="text-center mt-10 text-gray-600">Loading tasks...</p>;
+    if (loading)
+        return (
+            <p className="text-center mt-10 text-gray-600">Loading tasks...</p>
+        );
 
     return (
         <div>
             <Navbar />
-        <div className="max-w-2xl mx-auto mt-10 p-4">
-            
-            {/* Add Task Form */}
-            <form onSubmit={handleAddTask} className="flex flex-col gap-2 mb-6">
-                <input
-                    type="text"
-                    placeholder="Enter task title"
-                    value={newTask}
-                    onChange={(e) => setNewTask(e.target.value)}
-                    className="border rounded px-3 py-2"
-                />
-                <input
-                    type="text"
-                    placeholder="Enter task description"
-                    value={newDisc}
-                    onChange={(e) => setNewDisc(e.target.value)}
-                    className="border rounded px-3 py-2"
-                />
-                <button
-                    type="submit"
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                    Add
-                </button>
-            </form>
+            <div className="max-w-2xl mx-auto mt-10 p-4">
+                <h1 className="text-2xl font-bold mb-4">My Tasks</h1>
 
-            {/* Task List */}
-            {tasks.length === 0 ? (
-                <p className="text-gray-500">No tasks yet.</p>
-            ) : (
-                <ul className="space-y-3">
-                    {tasks.map((task) => (
-                        
-                        <li
-                            key={task._id}
-                            className="p-4 bg-white rounded shadow flex justify-between items-center"
-                        >
-                            {editingTask === task._id ? (
-                                <div className="flex flex-col gap-2 w-full">
-                                    <input
-                                        type="text"
-                                        value={editTitle}
-                                        onChange={(e) => setEditTitle(e.target.value)}
-                                        className="border rounded px-2 py-1"
-                                    />
-                                    <input
-                                        type="text"
-                                        value={editDesc}
-                                        onChange={(e) => setEditDesc(e.target.value)}
-                                        className="border rounded px-2 py-1"
-                                    />
-                                    <div className="flex gap-2 mt-2">
-                                        <button
-                                            onClick={() => handleSaveEdit(task._id)}
-                                            className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
-                                        >
-                                            Save
-                                        </button>
-                                        <button
-                                            onClick={cancelEditing}
-                                            className="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500"
-                                        >
-                                            Cancel
-                                        </button>
-                                    </div>
-                                </div>
-                            ) : (
-                                <>
-                                    <div className="flex items-center gap-3">
-                                        <input
-                                            type="checkbox"
-                                            checked={task.completed}
-                                            onChange={() => handleToggleComplete(task._id, task.completed)}
-                                            className="h-5 w-5"
-                                        />
+                {/* Add Task Form */}
+                <form onSubmit={handleAddTask} className="flex flex-col gap-2 mb-6">
+                    <input
+                        type="text"
+                        placeholder="Enter task title"
+                        value={newTask}
+                        onChange={(e) => setNewTask(e.target.value)}
+                        className="border rounded px-3 py-2"
+                    />
+                    <input
+                        type="text"
+                        placeholder="Enter task description"
+                        value={newDisc}
+                        onChange={(e) => setNewDisc(e.target.value)}
+                        className="border rounded px-3 py-2"
+                    />
+                    <button
+                        type="submit"
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    >
+                        Add
+                    </button>
+                </form>
+
+                {/* Task List */}
+                {tasks.length === 0 ? (
+                    <p className="text-gray-500">No tasks yet.</p>
+                ) : (
+                    <ul className="space-y-4">
+                        {tasks.map((task) => (
+                            <li
+                                key={task._id}
+                                className={`p-5 rounded-xl shadow-md border-l-8 transition-all duration-300 hover:shadow-lg flex justify-between items-center bg-white ${task.completed ? "border-l-green-500" : "border-l-yellow-500"
+                                    }`}
+                            >
+                                {/* Task Info */}
+                                <div>
+                                    <h3 className="font-semibold text-lg text-gray-800">{task.title}</h3>
+                                    <p className="text-sm mt-1 text-gray-600">
+                                        <strong>Status:</strong>{" "}
                                         <span
-                                            className={task.completed ? "line-through text-gray-500" : ""}
+                                            className={`font-medium ${task.completed ? "text-green-600" : "text-yellow-600"
+                                                }`}
                                         >
-                                            {task.title}
+                                            {task.completed ? " Completed" : " Pending"}
                                         </span>
-                                    </div>
-                                    <div className="flex gap-2">
-                                        <Link
-                                            to={`/tasks/${task._id}`}
-                                            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                                        >
-                                            View
-                                        </Link>
-                                        <button
-                                            onClick={() => startEditing(task)}
-                                            className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(task._id)}
-                                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
-                                </>
-                            )}
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </div>
+                                    </p>
+                                </div>
+
+                                {/* Actions */}
+                                <div className="flex gap-3">
+                                    <Link
+                                        to={`/tasks/${task._id}`}
+                                        className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition"
+                                    >
+                                        View
+                                    </Link>
+                                    <button
+                                        onClick={() => handleDelete(task._id)}
+                                        className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+
+
+                )}
+            </div>
         </div>
     );
 }
