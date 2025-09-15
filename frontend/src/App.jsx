@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Tasks from "./pages/Tasks";
+import TaskDetails from "./pages/TaskDetails"
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/tasks" element={<Tasks />} />
+        <Route path="/tasks/:id" element={<TaskDetails/>}/>
       </Routes>
     </Router>
   );
